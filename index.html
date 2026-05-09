@@ -15,47 +15,117 @@
 }
 
 body{
-    background:url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?q=80&w=1200&auto=format&fit=crop') no-repeat center center/cover;
-    background-size:cover;
-    background-position:center;
+    overflow:hidden;
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    overflow:auto;
     position:relative;
-    padding:20px;
+    background:black;
 }
 
-body::before{
-    content:'';
+/* VIDEO BACKGROUND */
+
+#bg-video{
+    position:fixed;
+    right:0;
+    bottom:0;
+    min-width:100%;
+    min-height:100%;
+    object-fit:cover;
+    z-index:-3;
+    filter:brightness(0.7);
+}
+
+/* DARK GLASS OVERLAY */
+
+.overlay{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.30);
+    background:rgba(0,0,0,0.25);
     backdrop-filter:blur(1px);
-    z-index:0;
+    z-index:-2;
 }
+
+/* WATER DROP EFFECT */
+
+.water{
+    position:absolute;
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:
+    inset 0 0 20px rgba(255,255,255,0.08),
+    0 0 20px rgba(255,255,255,0.08);
+    backdrop-filter:blur(3px);
+    animation:float 8s linear infinite;
+}
+
+.water:nth-child(1){
+    top:8%;
+    left:15%;
+}
+
+.water:nth-child(2){
+    top:18%;
+    right:12%;
+    width:90px;
+    height:90px;
+}
+
+.water:nth-child(3){
+    bottom:18%;
+    left:10%;
+    width:140px;
+    height:140px;
+}
+
+.water:nth-child(4){
+    bottom:10%;
+    right:15%;
+    width:80px;
+    height:80px;
+}
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(15px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+
+}
+
+/* MAIN CONTAINER */
 
 .container{
     width:100%;
     max-width:420px;
     position:relative;
-    z-index:5;
+    z-index:10;
     text-align:center;
     color:white;
+    padding:20px;
 }
 
-.profile{
-    margin-bottom:25px;
-}
+/* PROFILE */
 
 .profile img{
     width:130px;
     height:130px;
     border-radius:50%;
     object-fit:cover;
-    border:4px solid rgba(255,255,255,0.3);
-    box-shadow:0 0 25px rgba(255,255,255,0.25);
+    border:4px solid rgba(255,255,255,0.25);
+    box-shadow:0 0 30px rgba(255,255,255,0.20);
 }
 
 .title{
@@ -66,10 +136,12 @@ body::before{
 
 .subtitle{
     margin-top:10px;
-    font-size:24px;
-    color:#e6e6e6;
+    font-size:23px;
+    color:#ededed;
     font-weight:600;
 }
+
+/* BUTTONS */
 
 .buttons{
     margin-top:35px;
@@ -81,22 +153,22 @@ body::before{
 .btn{
     text-decoration:none;
     color:white;
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.12);
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.10);
     backdrop-filter:blur(18px);
     -webkit-backdrop-filter:blur(18px);
     padding:18px 20px;
-    border-radius:25px;
+    border-radius:28px;
     display:flex;
     align-items:center;
     gap:15px;
     transition:0.3s;
-    box-shadow:0 8px 25px rgba(0,0,0,0.25);
+    box-shadow:0 8px 25px rgba(0,0,0,0.30);
 }
 
 .btn:hover{
     transform:scale(1.02);
-    background:rgba(255,255,255,0.14);
+    background:rgba(255,255,255,0.12);
 }
 
 .btn img{
@@ -107,35 +179,11 @@ body::before{
 }
 
 .btn span{
-    font-size:23px;
+    font-size:22px;
     font-weight:600;
 }
 
-/* Slow Rain */
-
-.rain{
-    position:fixed;
-    top:-120px;
-    width:3px;
-    height:120px;
-    background:linear-gradient(transparent, rgba(255,255,255,0.35));
-    border-radius:50px;
-    animation:rain linear infinite;
-    z-index:1;
-    opacity:0.5;
-}
-
-@keyframes rain{
-
-    0%{
-        transform:translateY(-150px);
-    }
-
-    100%{
-        transform:translateY(120vh);
-    }
-
-}
+/* MOBILE */
 
 @media(max-width:500px){
 
@@ -148,7 +196,7 @@ body::before{
     }
 
     .btn span{
-        font-size:19px;
+        font-size:18px;
     }
 
 }
@@ -158,6 +206,20 @@ body::before{
 
 <body>
 
+<!-- VIDEO -->
+<video autoplay muted loop playsinline id="bg-video">
+    <source src="background.mp4" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+
+<!-- WATER DROPS -->
+<div class="water"></div>
+<div class="water"></div>
+<div class="water"></div>
+<div class="water"></div>
+
+<!-- MAIN -->
 <div class="container">
 
     <div class="profile">
@@ -196,26 +258,6 @@ body::before{
     </div>
 
 </div>
-
-<script>
-
-for(let i = 0; i < 80; i++){
-
-    let rain = document.createElement("div");
-
-    rain.classList.add("rain");
-
-    rain.style.left = Math.random() * window.innerWidth + "px";
-
-    rain.style.animationDuration = (Math.random() * 4 + 6) + "s";
-
-    rain.style.animationDelay = Math.random() * 5 + "s";
-
-    document.body.appendChild(rain);
-
-}
-
-</script>
 
 </body>
 </html>
